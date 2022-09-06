@@ -6,6 +6,7 @@ from pathlib import Path
 def is_file(directory: Path, filename: str) -> bool:
     """Identifies if a file exists given a directory and filename"""
     file = directory / filename
+    print(file)
     return file.exists()
 
 def get_directories(files: list) -> list:
