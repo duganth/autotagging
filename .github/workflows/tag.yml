@@ -19,6 +19,7 @@ jobs:
       - name: install python packages
         run: |
           python -m pip install --upgrade pip
+          pip install -r scripts/auto_tag/requirements.txt
 
       - name: execute py script # run sj-gobierno.py to get the latest data
         run: python scripts/auto_tag/auto_tag.py
