@@ -3,6 +3,8 @@ from git import Repo
 import os
 from pathlib import Path 
 import re
+import logging
+import sys
 
 def is_file(directory: Path, filename: str) -> bool:
     """Identifies if a file exists given a directory and filename"""
@@ -45,9 +47,12 @@ def generate_tag(path):
         return None
 
 def create_tag(repo, tag):
-    tag = repo.create_tag(tag)
-    repo.remotes.origin.push(tag.path)
-    
+    try:
+        logging.info(f"Creating {tag}")
+        tag = repo.create_tag(tag)
+        repo.remotes.origin.push(tag.path)
+    except:
+        logging.error("failed") 
 
 def get_tag(path):
     tag = re.search('modules', path)
@@ -65,10 +70,11 @@ def get_version(file):
 
 
 
-
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 path = Path(os.path.dirname(os.path.abspath(__file__)))
 repo = Repo(path, search_parent_directories=True)
 current_commit = repo.head.commit
+logging.info(f"Current commit {current_commit}")
 diff_files = current_commit.diff("HEAD~1", create_patch=True)
 try:
     changed_files = [ a.a_path for a in diff_files if 'tfmodule.yaml' in a.a_path ]
