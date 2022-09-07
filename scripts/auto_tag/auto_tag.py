@@ -6,7 +6,6 @@ from pathlib import Path
 def is_file(directory: Path, filename: str) -> bool:
     """Identifies if a file exists given a directory and filename"""
     file = directory / filename
-    print(file)
     return file.exists()
 
 def get_directories(files: list) -> list:
@@ -38,18 +37,9 @@ def check_version_file(directories: Path, feature, main, staged_tf):
 
 def check_default_branch(repo):
     DEFAULT = "main"
-    if repo.active_branch != DEFAULT:
-        print("wrong")
 
 path = Path(os.path.dirname(os.path.abspath(__file__)))
 repo = Repo(path, search_parent_directories=True)
 current_commit = repo.head.commit
-main_commit = repo.commit("HEAD")
-staged_tf = [ a.a_path for a in main_commit.diff("HEAD~1") if 'tfmodule.yaml' in a.a_path ]
-bstaged_tf = [ a.b_path for a in main_commit.diff("HEAD~1") if 'tfmodule.yaml' in a.b_path ]
-print(bstaged_tf)
-check_default_branch(repo)
-dirs = get_directories(staged_tf)
-module_dirs = get_module_directories(dirs)
-print(dirs)   
-print(module_dirs)
+changed_files = [ a.a_path for a in current_commit.diff("HEAD~1", create_patch=True) if 'tfmodule.yaml' in a.a_path ]
+print(changed_files)
