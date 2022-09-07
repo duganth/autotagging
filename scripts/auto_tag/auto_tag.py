@@ -38,12 +38,16 @@ def check_version_file(directories: Path, feature, main, staged_tf):
 
 def generate_tag(path):
     tag = re.match(r'modules\/[a-zA-Z0-9\/_-]+\/', path)
-    print(tag.string)
     if tag:
         clean_tag = re.sub(r'[^a-zA-Z0-9\/_-]', "_", tag.group(0))
         return clean_tag
     else:
         return None
+
+def create_tag(repo, tag):
+    tag = repo.create_tag(tag)
+    repo.remotes.origin.push(tag.path)
+    
 
 def get_tag(path):
     tag = re.search('modules', path)
@@ -72,5 +76,6 @@ except TypeError:
     changed_files = []
 
 for file in changed_files:
-    print(get_version(file))
-    print(generate_tag(file))
+    version = get_version(file)
+    tag = generate_tag(file)
+    create_tag(repo, f'{tag}{version}')
