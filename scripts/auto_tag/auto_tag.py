@@ -45,8 +45,8 @@ path = Path(os.path.dirname(os.path.abspath(__file__)))
 repo = Repo(path, search_parent_directories=True)
 current_commit = repo.head.commit
 main_commit = repo.commit("HEAD")
-staged_tf = [ a.a_path for a in repo.index.diff("HEAD~1") if 'tfmodule.yaml' in a.a_path ]
-bstaged_tf = [ a.b_path for a in repo.index.diff("HEAD~1") if 'tfmodule.yaml' in a.b_path ]
+staged_tf = [ a.a_path for a in main_commit.diff("HEAD~1") if 'tfmodule.yaml' in a.a_path ]
+bstaged_tf = [ a.b_path for a in main_commit.diff("HEAD~1") if 'tfmodule.yaml' in a.b_path ]
 print(bstaged_tf)
 check_default_branch(repo)
 dirs = get_directories(staged_tf)
