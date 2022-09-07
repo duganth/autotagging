@@ -48,7 +48,7 @@ def generate_tag(path):
 
 def create_tag(repo, tag):
     try:
-        logging.info(f"Creating {tag}")
+        logging.info(f"Creating tag: {tag}")
         tag = repo.create_tag(tag)
         repo.remotes.origin.push(tag.path)
     except:
