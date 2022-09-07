@@ -81,6 +81,8 @@ try:
 except TypeError:
     changed_files = []
 
+logging.info(f"Tagging {len(changed_files} modules.")
+
 for file in changed_files:
     version = get_version(file)
     tag = generate_tag(file)
