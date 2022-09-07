@@ -8,6 +8,7 @@ authors = ["Tom Dugan <tom.dugan@affirm.com>"]
 python = "^3.10"
 GitPython = "^3.1.27"
 PyYAML = "^6.0"
+regex = "^2022.8.17"
 
 [tool.poetry.dev-dependencies]
 

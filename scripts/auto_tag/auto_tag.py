@@ -2,6 +2,7 @@ import yaml
 from git import Repo
 import os
 from pathlib import Path 
+import re
 
 def is_file(directory: Path, filename: str) -> bool:
     """Identifies if a file exists given a directory and filename"""
@@ -35,11 +36,27 @@ def check_version_file(directories: Path, feature, main, staged_tf):
         current_version = yaml.safe_load(feature.tree[str(module_file)].data_stream.read())
         main_version = yaml.safe_load(main.tree[str(module_file)].data_stream.read())
 
-def check_default_branch(repo):
-    DEFAULT = "main"
+def generate_tag(tag):
+    clean_tag = re.sub(r'[^a-zA-Z0-9\/_-]', "_", tag)
+    return clean_tag
+
+def get_tag(path):
+    tag = re.search(r'modules\/[a-zA-Z0-9\/_-]+/', path)
+    #tag = re.search('modules', path)
+    if tag:
+        return tag.string
+    else:
+        return None
 
 path = Path(os.path.dirname(os.path.abspath(__file__)))
 repo = Repo(path, search_parent_directories=True)
 current_commit = repo.head.commit
-changed_files = [ a.a_path for a in current_commit.diff("HEAD~1", create_patch=True) if 'tfmodule.yaml' in a.a_path ]
-print(changed_files)
+diff_files = current_commit.diff("HEAD~1", create_patch=True)
+try:
+    changed_files = [ a.a_path for a in diff_files if 'tfmodule.yaml' in a.a_path ]
+except TypeError:
+    changed_files = []
+
+for file in changed_files:
+    print(generate_tag)
+
