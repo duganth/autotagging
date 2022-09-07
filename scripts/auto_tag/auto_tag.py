@@ -36,12 +36,16 @@ def check_version_file(directories: Path, feature, main, staged_tf):
         current_version = yaml.safe_load(feature.tree[str(module_file)].data_stream.read())
         main_version = yaml.safe_load(main.tree[str(module_file)].data_stream.read())
 
-def generate_tag(tag):
-    clean_tag = re.sub(r'[^a-zA-Z0-9\/_-]', "_", tag)
-    return clean_tag
+def generate_tag(path):
+    tag = re.match(r'modules\/[a-zA-Z0-9\/_-]+\/', path)
+    print(tag.string)
+    if tag:
+        clean_tag = re.sub(r'[^a-zA-Z0-9\/_-]', "_", tag.group(0))
+        return clean_tag
+    else:
+        return None
 
 def get_tag(path):
-    tag = re.search(r'modules\/[a-zA-Z0-9\/_-]+/', path)
     #tag = re.search('modules', path)
     if tag:
         return tag.string
@@ -58,5 +62,5 @@ except TypeError:
     changed_files = []
 
 for file in changed_files:
-    print(generate_tag)
+    print(generate_tag(file))
 
