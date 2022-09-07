@@ -46,11 +46,21 @@ def generate_tag(path):
         return None
 
 def get_tag(path):
-    #tag = re.search('modules', path)
+    tag = re.search('modules', path)
     if tag:
         return tag.string
-    else:
-        return None
+    return None
+
+def get_version(file):
+    try:
+        with open(file, 'r') as f:
+            tfmodule_content = yaml.safe_load(f)
+    except yaml.YAMLError as exception:
+       print(exception)
+    return tfmodule_content['version']
+
+
+
 
 path = Path(os.path.dirname(os.path.abspath(__file__)))
 repo = Repo(path, search_parent_directories=True)
@@ -62,5 +72,5 @@ except TypeError:
     changed_files = []
 
 for file in changed_files:
+    print(get_version(file))
     print(generate_tag(file))
-
