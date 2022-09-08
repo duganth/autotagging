@@ -21,9 +21,7 @@ def get_remote_tags(repo, namespace):
 def check_tag(namespace, tag, repo):
     existing_tags = get_remote_tags(repo, namespace)
     if tag in existing_tags:
-        git_util_logger.error('Tag: %s exists. Tag will not be created', tag)
         return True
-    git_util_logger.debug('%s not found', tag)
     return False
 
 def filter_changed_files(repo, filter_file):
