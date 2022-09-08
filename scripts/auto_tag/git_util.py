@@ -3,15 +3,15 @@ import re
 import sys
 from git import GitCommandError
 
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
+git_util_logger = logging.getLogger('auto_tag.git_util')
 
 def create_tag(repo, tag, message=None):
     try:
-        logging.info("Creating tag: %s", tag)
+        git_util_logger.info("Creating tag: %s", tag)
         tag = repo.create_tag(tag)
         repo.remotes.origin.push(tag.path, message=message)
     except GitCommandError as error:
-        logging.error("\n %s", error) 
+        git_util_logger.error("\n %s", error) 
 
 def get_remote_tags(repo, namespace):
     remote_tags = repo.git.ls_remote('--sort=-v:refname', '--tags', '.', f'{namespace}*')
@@ -21,25 +21,25 @@ def get_remote_tags(repo, namespace):
 def check_tag(namespace, tag, repo):
     existing_tags = get_remote_tags(repo, namespace)
     if tag in existing_tags:
-        logging.error('Tag: %s exists. Tag will not be created', tag)
+        git_util_logger.error('Tag: %s exists. Tag will not be created', tag)
         return True
-    logging.debug('%s not found', tag)
+    git_util_logger.debug('%s not found', tag)
     return False
 
 def filter_changed_files(repo, filter_file):
     current_commit = repo.head.commit
     previous_commit = repo.commit('HEAD~1')
-    logging.info("Finding changed files between commits.")
-    logging.info("Current Commit: %s.", current_commit)
-    logging.info("Previous Commit: %s.", previous_commit)
+    git_util_logger.info("Finding changed files between commits.")
+    git_util_logger.info("Current Commit: %s.", current_commit)
+    git_util_logger.info("Previous Commit: %s.", previous_commit)
     diff_files = current_commit.diff(previous_commit, create_patch=True)
     try:
-        logging.info("Filtering the changed files.")
+        git_util_logger.info("Filtering the changed files.")
         filtered_files = [ file.a_path for file in diff_files if filter_file in file.a_path ]
-        logging.debug("Filtered files: %s", filtered_files)
+        git_util_logger.debug("Filtered files: %s", filtered_files)
         return filtered_files
     except TypeError:
-        logging.debug("There are no changed or modified files.")
+        git_util_logger.debug("There are no changed or modified files.")
         return []
 
 
