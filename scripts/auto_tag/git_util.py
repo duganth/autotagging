@@ -24,15 +24,11 @@ def check_tag(namespace, tag, repo):
         return True
     return False
 
-def filter_changed_files(repo, filter_file):
-    current_commit = repo.head.commit
-    diff_commit = repo.commit("main")
-    if diff_commit == current_commit:
-        diff_commit = repo.commit('main~1')
+def filter_changed_files(base_commit, diff_commit, repo, filter_file):
     git_util_logger.info("Finding changed files between commits.")
-    git_util_logger.info("Current Commit: %s.", current_commit)
-    git_util_logger.info("Previous Commit: %s.", diff_commit)
-    diff_files = current_commit.diff(diff_commit, create_patch=True)
+    git_util_logger.info("Base Commit: %s.", base_commit)
+    git_util_logger.info("Diff Commit: %s.", diff_commit)
+    diff_files = base_commit.diff(diff_commit, create_patch=True)
     try:
         git_util_logger.info("Filtering the changed files.")
         filtered_files = [ file.a_path for file in diff_files if filter_file in file.a_path ]

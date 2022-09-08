@@ -19,7 +19,9 @@ logger.addHandler(console)
 def main():
     logger.info("DRY_RUN enabled: %s", DRY_RUN)
     repo = Repo('.', search_parent_directories=True)
-    changed_files = git_util.filter_changed_files(repo, 'tfmodule.yaml')
+    current_commit = repo.head.commit
+    previous_commit = repo.commit("HEAD~1")
+    changed_files = git_util.filter_changed_files(current_commit, previous_commit, repo, 'tfmodule.yaml')
     logger.info("Tagging %s modules.", len(changed_files))
     for changed_file in changed_files:
         terraffirm_namespace = terraffirm.get_terraffirm_module_namespace(changed_file)
