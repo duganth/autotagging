@@ -6,6 +6,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DRY_RUN: False
     steps:
       - name: checkout repo content
         uses: actions/checkout@v3 # checkout the repository content to github runner
@@ -24,5 +26,3 @@ jobs:
 
       - name: execute py script # run sj-gobierno.py to get the latest data
         run: python scripts/auto_tag/auto_tag.py
-        env:
-          DRY_RUN: False
