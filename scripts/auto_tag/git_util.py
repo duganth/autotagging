@@ -21,18 +21,18 @@ def get_remote_tags(repo, namespace):
 def check_tag(namespace, tag, repo):
     existing_tags = get_remote_tags(repo, namespace)
     if tag in existing_tags:
-        git_util_logger.error('Tag: %s exists. Tag will not be created', tag)
         return True
-    git_util_logger.debug('%s not found', tag)
     return False
 
 def filter_changed_files(repo, filter_file):
     current_commit = repo.head.commit
-    previous_commit = repo.commit('HEAD~1')
+    diff_commit = repo.commit("main")
+    if diff_commit == current_commit:
+        diff_commit = repo.commit('HEAD~1')
     git_util_logger.info("Finding changed files between commits.")
     git_util_logger.info("Current Commit: %s.", current_commit)
-    git_util_logger.info("Previous Commit: %s.", previous_commit)
-    diff_files = current_commit.diff(previous_commit, create_patch=True)
+    git_util_logger.info("Previous Commit: %s.", diff_commit)
+    diff_files = current_commit.diff(diff_commit, create_patch=True)
     try:
         git_util_logger.info("Filtering the changed files.")
         filtered_files = [ file.a_path for file in diff_files if filter_file in file.a_path ]
