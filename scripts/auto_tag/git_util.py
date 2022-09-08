@@ -28,7 +28,7 @@ def filter_changed_files(repo, filter_file):
     current_commit = repo.head.commit
     diff_commit = repo.commit("main")
     if diff_commit == current_commit:
-        diff_commit = repo.commit('HEAD~1')
+        diff_commit = repo.commit('main~1')
     git_util_logger.info("Finding changed files between commits.")
     git_util_logger.info("Current Commit: %s.", current_commit)
     git_util_logger.info("Previous Commit: %s.", diff_commit)
