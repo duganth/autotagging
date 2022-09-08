@@ -14,7 +14,7 @@ def create_tag(repo, tag, message=None):
         git_util_logger.error("\n %s", error) 
 
 def get_remote_tags(repo, namespace):
-    remote_tags = repo.git.ls_remote('--sort=-v:refname', '--tags', '.', f'{namespace}*')
+    remote_tags = repo.git.ls_remote('--sort=-v:refname', '--tags', 'origin', f'{namespace}*')
     clean_tags = re.sub(r'([a-f0-9]{40}\trefs\/tags\/)+','', remote_tags).split('\n')
     return clean_tags
 
