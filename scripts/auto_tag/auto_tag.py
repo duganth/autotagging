@@ -7,7 +7,7 @@ from git import Repo
 
 LOGLEVEL = os.environ.get('LOGLEVEL', 'INFO').upper()
 DRYRUN = os.environ.get('DRYRUN', False)
-DRY_RUN = (os.getenv('DRY_RUN', 'True') == 'False')
+DRY_RUN = not (os.getenv('DRY_RUN', 'True') == 'False')
 
 logger = logging.getLogger('auto_tag')
 logger.setLevel(LOGLEVEL)
